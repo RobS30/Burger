@@ -9,6 +9,7 @@ addBurger: function(table_name, columns, values, cb) {
     sql += columns.toString();
     sql += ") ";
     sql += "VALUES (";
+    console.log(sql);
     // printQuestionMarks is a helper function creates question marks for mysql queries
     sql += printQuestionMarks(values.length);
     sql += ") ";
