@@ -1,61 +1,42 @@
-// Make sure we wait to attach our handlers until the DOM is fully loaded.
 $(function() {
-    $(".change-sleep").on("click", function(event) {
-      var id = $(this).data("id");
-      var newSleep = $(this).data("newsleep");
-  
-      var newSleepState = {
-        sleepy: newSleep
+  // Create a new burger
+  // Creates listener that sits on submit button
+  $(".createBurgerButton").on("submit", function(event) {
+    event.preventDefault();
+    // creates a burger variable to hold the form data
+    var name = $("#burger")
+      // grabs the values from our forms
+      .val()
+      .trim();
+    if (name) {
+      var burger = {
+        burger_name: name,
+        devoured: false
       };
-  
-      // Send the PUT request.
-      $.ajax("/api/burgers/" + id, {
-        type: "PUT",
-        data: newSleepState
-      }).then(
-        function() {
-          console.log("changed sleep to", newSleep);
-          // Reload the page to get the updated list
-          loburgerion.reload();
-        }
-      );
-    });
-  
-    $(".create-form").on("submit", function(event) {
-      // Make sure to preventDefault on a submit event.
-      event.preventDefault();
-  
-      var newburger = {
-        name: $("#ca").val().trim(),
-        sleepy: $("[name=sleepy]:checked").val().trim()
-      };
-  
-      // Send the POST request.
-      $.ajax("/api/burgers", {
+      $.ajax("/api/burgers/", {
         type: "POST",
-        data: newburger
-      }).then(
-        function() {
-          console.log("created new burger");
-          // Reload the page to get the updated list
-          loburgerion.reload();
-        }
-      );
-    });
-  
-    $(".delete-burger").on("click", function(event) {
-      var id = $(this).data("id");
-  
-      // Send the DELETE request.
-      $.ajax("/api/burgers/" + id, {
-        type: "DELETE"
-      }).then(
-        function() {
-          console.log("deleted burger", id);
-          // Reload the page to get the updated list
-          loburgerion.reload();
-        }
-      );
+        data: burger
+      }).then(function(data) {
+        // this will reload our page to get the updated list of burgers
+        location.reload();
+      });
+    } else {
+      alert("Your order cannot be completed");
+    }
+  });
+
+  // devour burger function
+  // Creates a listener that sits on on our devour burger button
+  $(".devourBurgerButton").on("click", function(event) {
+    event.preventDefault();
+    $.ajax("/api/burgers/" + this.id, {
+      type: "PUT",
+      data: {
+        devoured: true
+      }
+    }).then(function(data) {
+      // this will reload our page to get the updated list of burgers
+      location.reload();
     });
   });
-  
+});
